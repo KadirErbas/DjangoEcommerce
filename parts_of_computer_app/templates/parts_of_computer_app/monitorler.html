@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+    Monitör
+{% endblock %}
+
+{% block sort_content %}
+
+    <a href="{% url 'parts_of_computer_app:product_by_cost' %}?order=price_asc&category=monitorler" class="btn btn-primary">Fiyatı ucuzdan pahalıya sırala</a>
+    <a href="{% url 'parts_of_computer_app:product_by_cost' %}?order=price_desc&category=monitorler" class="btn btn-primary mt-2">Fiyatı pahalıdan ucuza sırala</a>
+{% endblock %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+
+    {% for monitor in monitorler %}
+        <div class="card" style="width: 18rem; float: left; margin: 2%;">
+            <img src={{ monitor.image_url }} alt={{ name }} width="250" height="250" class="card-img-top" alt={{ name }}>
+            <div class="card-body">
+                <h5 class="card-title">{{ monitor.price }} TL</h5>
+                <p class="card-text">{{ monitor.name }}</p>
+                
+                <a href="#" class="btn btn-primary" onclick="showNotification(parseInt('{{ monitor.id }}'))">Ekle</a>
+                <a href="{% url 'parts_of_computer_app:urun-detaylari' id=monitor.id %}" class="btn btn-warning" >Detaylar</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

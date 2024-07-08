@@ -86,13 +86,52 @@
         min-height: 75rem;
         padding-top: 4.5rem;
         }
+        .card{
+          border:0;
+        }
+        .card-img-top:hover {
+          transform: scale(1.05); /* Increase image size by 10% on hover */
+          transition: transform 0.3s ease-in-out; /* Smooth transition effect */
+        }
+        
+        .card-img-top {
+          transition: transform 0.3s ease-in-out; /* Initial transition for hover effect */
+        }
+        
+        .hover:hover {
+          transform: scale(1.1); /* Increase image size on hover */
+        }
+        .btn-primary {
+          background-color: #38cfdc; /* Light blue */
+          color: #fff; /* White text */
+        }
+        .btn-primary:hover {
+          background-color: #2e8dbc; /* Darker blue on hover */
+        }
+        .card-img-top:hover::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0.5; /* Semi-transparent background */
+          background-color: black; /* Black color for the overlay */
+          transition: opacity 0.3s ease-in-out;
+        }
+        
+        .card-img-top:hover .btn-primary {
+          /* Style the button here to appear on top of the overlay */
+          opacity: 1; /* Make button fully visible on hover */
+        }
+        
       </style>
   
 
 </head>
 <body>
   <!-- Navbar - Start-->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+    <nav class="navbar navbar-expand-md fixed-top bg-dark navbar-dark">
         <div class="container-fluid">
           <a class="navbar-brand" aria-disabled="true">Bilgisayar Parçaları</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,41 +148,60 @@
               <li class="nav-item">
                 <a class="nav-link" href="#"> Hakkımızda</a>
               </li>              
-              <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li>
             </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex" role="search" method="get" action="{% url 'product_by_search' %}">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
               <button class="btn btn-outline-success" type="submit">Ara</button>
             </form>
+
           </div>
         </div>
       </nav>
   <!-- Navbar End -->
+      <div class="container"> 
+        <div class="column">
+
+        </div>
+      </div>
 
       <div class="container mt-3">
         <div class="row">
           <div class="col-3">
             <!--menu-->
             <div class="list-group">
-              <a href="{% url 'parts_of_computer_app:anakart' %}" class="list-group-item list-group-item-action">Anakart </a>
-              <a href="{% url 'parts_of_computer_app:bilgisayar-kasalari' %}" class="list-group-item list-group-item-action">Bilgisayar Kasaları </a>
-              <a href="{% url 'parts_of_computer_app:ekran-karti' %}" class="list-group-item list-group-item-action">Ekran Kartı</a>       
-              <a href="{% url 'parts_of_computer_app:islemci' %}" class="list-group-item list-group-item-action">İşlemci</a>       
-              <a href="{% url 'parts_of_computer_app:ram' %}" class="list-group-item list-group-item-action">Ram</a>       
-              <a href="{% url 'parts_of_computer_app:islemci-sogutucular' %}" class="list-group-item list-group-item-action">Soğutucular</a> 
-              <a href="{% url 'parts_of_computer_app:kasa-fanlari' %}" class="list-group-item list-group-item-action">Kasa Fanları</a>       
-              <a href="{% url 'parts_of_computer_app:termal-macun' %}" class="list-group-item list-group-item-action">Termal Macun</a>
-              <a href="{% url 'parts_of_computer_app:klavye' %}" class="list-group-item list-group-item-action">Klavye</a>       
-              <a href="{% url 'parts_of_computer_app:monitor' %}" class="list-group-item list-group-item-action">Monitor</a>       
-              <a href="{% url 'parts_of_computer_app:mouse' %}" class="list-group-item list-group-item-action">Mouse</a>       
+
+              <a href="{% url 'parts_of_computer_app:anakartlar' %}" class="list-group-item list-group-item-action">Anakart </a>
+          
+              <a href="{% url 'parts_of_computer_app:bilgisayar_kasalari' %}" class="list-group-item list-group-item-action"> Bilgisayar Kasaları </a>
+
+              <a href="{% url 'parts_of_computer_app:ekran_kartlari' %}" class="list-group-item list-group-item-action">Ekran Kartı</a>       
+
+              <a href="{% url 'parts_of_computer_app:islemciler' %}" class="list-group-item list-group-item-action">İşlemci</a>       
+              <a href="{% url 'parts_of_computer_app:ramler' %}" class="list-group-item list-group-item-action">Ram</a>       
+              <a href="{% url 'parts_of_computer_app:islemci_sogutucular' %}" class="list-group-item list-group-item-action">Soğutucular</a> 
+              <a href="{% url 'parts_of_computer_app:kasa_fanlari' %}" class="list-group-item list-group-item-action">Kasa Fanları</a>       
+              <a href="{% url 'parts_of_computer_app:termal_macunlar' %}" class="list-group-item list-group-item-action">Termal Macun</a>
+              <a href="{% url 'parts_of_computer_app:klavyeler' %}" class="list-group-item list-group-item-action">Klavye</a>       
+              <a href="{% url 'parts_of_computer_app:monitorler' %}" class="list-group-item list-group-item-action">Monitor</a>       
+              <a href="{% url 'parts_of_computer_app:mouseler' %}" class="list-group-item list-group-item-action">Mouse</a>       
 
             </div>
+            <div class="sort mt-3">
+              {% block sort_content %}
+                
+                
+              {% endblock %}
+
+            </div>
+          
           </div>
           <div class="col-9">
-            {% block content %}
+            
 
+            {% if no_results %}
+            <p>Üzgünüz, "{{ search_query }}" için bir sonuç bulunamadı.</p>
+            {% endif %}
+            {% block content %}
       
             {% endblock %}
 
@@ -167,6 +225,12 @@
       </footer>  
       <!-- Footer - End -->    
 
+    <script>
+        function showNotification(urunid) {
+            alert("Merhaba! Ürün başarıyla sepete eklendi. Ürün ID: " + urunid);
+        }
 
+        
+    </script>
 </body>
 </html>

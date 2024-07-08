@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from parts_of_computer_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('parts_of_computer_app/', include('parts_of_computer_app.urls'))
+    path('', include('parts_of_computer_app.urls')),
+
+    path('search/', views.product_by_search, name='product_by_search'),
+   
+
 
 ]
