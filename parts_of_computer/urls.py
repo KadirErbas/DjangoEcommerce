@@ -21,9 +21,7 @@ from parts_of_computer_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('parts_of_computer_app.urls')),
-
-    path('search/', views.product_by_search, name='product_by_search'),
-   
+    path("accounts/", include("django.contrib.auth.urls")),
 
 
 ]

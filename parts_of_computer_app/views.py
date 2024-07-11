@@ -1,86 +1,38 @@
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from . import models
 from django.db.models import Q
+from django.contrib.auth import authenticate, login
 
 
-# Create your views here.
-
-def islemci_view(request):
-    islemci = models.Product.objects.filter(category_id = 1)
-    islemci_dict={"islemciler": islemci}
-    return render(request, 'parts_of_computer_app/islemciler.html', context= islemci_dict)
-
-def anakart_view(request):
-    anakartlar = models.Product.objects.filter(category_id = 2)
-    anakart_dict={"anakartlar":anakartlar}
-    return render(request, 'parts_of_computer_app/anakartlar.html', context=anakart_dict)
-
-def ram_view(request):
-    ram = models.Product.objects.filter(category_id = 3)
-    ram_dict={"ramler": ram}    
-    return render(request, 'parts_of_computer_app/ramler.html', context= ram_dict)
-
-def ekran_karti_view(request):
-    ekran_karti = models.Product.objects.filter(category_id = 4)
-    ekran_karti_dict={"ekran_kartlari": ekran_karti}       
-    return render(request, 'parts_of_computer_app/ekran_kartlari.html',context=ekran_karti_dict)
-
-
-def bilgisayar_kasalari_view(request):  
-    bilgisayar_kasalari = models.Product.objects.filter(category_id = 5)
-    bilgisayar_kasalari_dict={"bilgisayar_kasalari": bilgisayar_kasalari}   
-    return render(request, 'parts_of_computer_app/bilgisayar_kasalari.html',context=bilgisayar_kasalari_dict)
-
-
-def islemci_sogutucular_view(request):
-    sogutucu = models.Product.objects.filter(category_id = 6)
-    sogutucu_dict={"islemci_sogutucular": sogutucu}    
-    return render(request, 'parts_of_computer_app/islemci_sogutucular.html', context= sogutucu_dict)
-
-def kasa_fanlari_view(request):
-    kasa_fanlari = models.Product.objects.filter(category_id = 7)
-    kasa_fanlari_dict={"kasa_fanlari": kasa_fanlari}    
-    return render(request, 'parts_of_computer_app/kasa_fanlari.html', context= kasa_fanlari_dict)
-
-def termal_macun_view(request):
-    termal_macun = models.Product.objects.filter(category_id = 8)
-    termal_macun_dict={"termal_macunlar": termal_macun}    
-    return render(request, 'parts_of_computer_app/termal_macunlar.html', context= termal_macun_dict)
-
-def klavye_view(request):
-    klavyeler = models.Product.objects.filter(category_id = 9)
-    klavyeler_dict={"klavyeler": klavyeler}    
-    return render(request, 'parts_of_computer_app/klavyeler.html', context= klavyeler_dict)
-
-def monitor_view(request):
-    monitorler = models.Product.objects.filter(category_id = 10)
-    monitorler_dict={"monitorler": monitorler}    
-    return render(request, 'parts_of_computer_app/monitorler.html', context= monitorler_dict)
-
-def mouse_view(request):
-    mouse = models.Product.objects.filter(category_id = 11)
-    mouse_dict={"mouseler": mouse}    
-    return render(request, 'parts_of_computer_app/mouseler.html', context= mouse_dict)
-
+category_name_mapping = {
+        "islemciler": "İşlemciler",
+        "anakartlar": "Anakartlar",
+        "ramler": "Ram",
+        "ekran_kartlari": "Ekran Kartları",
+        "bilgisayar_kasalari": "Bilgisayar Kasaları",
+        "islemci_sogutucular": "İşlemci Soğutucular",
+        "kasa_fanlari": "Kasa Fanları",
+        "termal_macunlar": "Termal Macunlar",
+        "klavyeler": "Klavyeler",
+        "monitorler": "Monitörler",
+        "mouseler": "Mouseler",
+}
 def home_view(request):
-  
-    products = models.Product.objects.all()
-    products_dict = {"products": products}
-    return render(request, 'parts_of_computer_app/home.html',context=products_dict)
+
+    category_context = {"category_name_mapping": category_name_mapping}
+    return render(request, 'parts_of_computer_app/home.html', context=category_context)
 
 def detay_view(request, id):
-    
     product = models.Product.objects.get(id=id)
-    print(product.category.name)
-
     product_dict = {"product": product}
     return render(request, 'parts_of_computer_app/urun-detaylari.html',context=product_dict)
 
 
 
 def product_by_search(request):
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get('ara', '')
     products = []
 
     if search_query:
@@ -93,41 +45,75 @@ def product_by_search(request):
         'search_query': search_query,
         'no_results': no_results
     }
-    return render(request, 'parts_of_computer_app/home.html', context)
+    return render(request, 'parts_of_computer_app/show_products.html', context)
 
 
 
 def products_by_cost(request):
     order = request.GET.get('order', '')
     category_name = request.GET.get('category', '')
-    print("burası",order)
-    print("burası",category_name)
 
-    # Tüm ürünleri listeleyin, ardından kategoriye göre filtreleyin
     products = models.Product.objects.all()
-
+    
     if category_name:
-        products = products.filter(category__name=category_name)
+        category_id = category_mapping.get(category_name)
+        if category_id is not None:
+            products = products.filter(category_id=category_id)
 
     if order == 'price_asc':
         products = products.order_by('price')
     elif order == 'price_desc':
         products = products.order_by('-price')
 
-    # Şablon adını dinamik olarak belirlemek
-    if category_name:
-        template_name = f'parts_of_computer_app/{category_name}.html'
-        print(template_name)
-    else:
-        template_name = 'parts_of_computer_app/home.html'
-
-    # category_name =  category_name.replace("-", "_")
-    print("category",category_name)
     context = {
-        category_name: products,  
+        'products': products,
         'order': order,
-        'category': category_name
+        'category_name': category_name,
+        "category_name_mapping": category_name_mapping
+
     }
-    return render(request, template_name, context)
+    return render(request, 'parts_of_computer_app/show_products.html', context)
 
 
+
+    # Define a dictionary mapping category names to category IDs
+category_mapping = {
+        "islemciler": 1,
+        "anakartlar": 2,
+        "ramler": 3,
+        "ekran_kartlari": 4,
+        "bilgisayar_kasalari": 5,
+        "islemci_sogutucular": 6,
+        "kasa_fanlari": 7,
+        "termal_macunlar": 8,
+        "klavyeler": 9,
+        "monitorler": 10,
+        "mouseler": 11,
+}
+
+def getProductsByCategory(request, category):
+    category_id = category_mapping.get(category)
+    if category_id is not None:
+        products = models.Product.objects.filter(category_id=category_id)
+        template = 'parts_of_computer_app/show_products.html'
+        context = {"products": products, "category_name": category, "category_name_mapping": category_name_mapping}
+        return render(request, template, context)
+    else:
+        return HttpResponseNotFound("Kategori bulunamadı")
+
+def getProductsByCategoryID(request, categoryID):
+    category_list = list(category_mapping.keys())
+
+    if (categoryID > len(category_list)):
+        return HttpResponseNotFound('Kategori bulunamadı')
+
+    category_name= category_list[categoryID-1]
+
+    redirect_url = reverse('parts_of_computer_app:ProductsByCategory', args=[category_name])
+    return redirect(redirect_url)   
+    
+def signup(request):
+    if request.POST:
+        username = request.POST["username"]
+        password = request.POST["password"]
+        print(username, password)

@@ -1,0 +1,36 @@
+{% extends 'parts_of_computer_app/home.html' %}
+
+{% block page_title %}
+    {{category_name}}
+{% endblock %}
+
+{% block sort_content %}
+
+<div class="sort mt-3">
+    <p>Kategory: {{ category_name }}</p> <!-- Debugging için ekleyin -->
+
+    <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_asc" class="btn btn-primary">Fiyatı ucuzdan pahalıya sırala</a>
+    <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_desc" class="btn btn-primary mt-2">Fiyatı pahalıdan ucuza sırala</a>
+</div>
+{% endblock %}
+
+
+{% block products %}
+
+</h1>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for product in products %}                  
+            <div class="card" style="width: 18rem; float: left; margin: 2%;">
+                <img src={{ product.image_url }} width="250" height="250" class="card-img-top" alt={{ name }}>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.price }} TL</h5>
+                    <p class="card-text">{{ product.name }}</p>
+                    
+                    <a href="#" class="btn btn-primary" onclick="showNotification(parseInt('{{ product.id }}'))">Ekle</a>
+                    <a href="{% url 'parts_of_computer_app:urun-detaylari' id=product.id %}" class="btn btn-warning" >Detaylar</a>
+                </div>
+            </div>
+        
+        {% endfor %}
+    </div>
+{% endblock %}

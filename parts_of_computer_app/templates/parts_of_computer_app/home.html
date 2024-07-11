@@ -1,13 +1,33 @@
-{% extends 'base.html' %}
+{% extends 'parts_of_computer_app/layout.html' %}
 {% block page_title %}
     Home
 {% endblock %}
 
-{% block content %}
-{% load static %}
+{% block categories %}
+  <div class="list-group">
+      {% for category, category_name in category_name_mapping.items %}
+          <a href="{% url 'parts_of_computer_app:ProductsByCategory' category %}" class="list-group-item list-group-item-action">{{ category_name }}</a>
+      {% endfor %}
+  </div>
 
-    <img src={% static "img/Home.png" %} alt="img" class="img-fluid" >
 {% endblock %}
+
+
+      {% block products %}
+
+                  {% load static %}
+          
+                      <img src={% static "img/Home.png" %} alt="img" class="img-fluid" >
+          
+                  {% if no_results %}
+                  <p>Üzgünüz, "{{ search_query }}" için bir sonuç bulunamadı.</p>
+                  {% endif %}
+      {% endblock %}
+          
+
+      
+
+
 
 
 <!--

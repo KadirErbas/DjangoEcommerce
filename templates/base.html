@@ -131,106 +131,20 @@
 </head>
 <body>
   <!-- Navbar - Start-->
-    <nav class="navbar navbar-expand-md fixed-top bg-dark navbar-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" aria-disabled="true">Bilgisayar Parçaları</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'parts_of_computer_app:home' %}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"> İletişim</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"> Hakkımızda</a>
-              </li>              
-            </ul>
-            <form class="d-flex" role="search" method="get" action="{% url 'product_by_search' %}">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
-              <button class="btn btn-outline-success" type="submit">Ara</button>
-            </form>
-
-          </div>
-        </div>
-      </nav>
+  {% include "partials/_nav.html" %}
   <!-- Navbar End -->
-      <div class="container"> 
-        <div class="column">
-
-        </div>
-      </div>
-
-      <div class="container mt-3">
-        <div class="row">
-          <div class="col-3">
-            <!--menu-->
-            <div class="list-group">
-
-              <a href="{% url 'parts_of_computer_app:anakartlar' %}" class="list-group-item list-group-item-action">Anakart </a>
-          
-              <a href="{% url 'parts_of_computer_app:bilgisayar_kasalari' %}" class="list-group-item list-group-item-action"> Bilgisayar Kasaları </a>
-
-              <a href="{% url 'parts_of_computer_app:ekran_kartlari' %}" class="list-group-item list-group-item-action">Ekran Kartı</a>       
-
-              <a href="{% url 'parts_of_computer_app:islemciler' %}" class="list-group-item list-group-item-action">İşlemci</a>       
-              <a href="{% url 'parts_of_computer_app:ramler' %}" class="list-group-item list-group-item-action">Ram</a>       
-              <a href="{% url 'parts_of_computer_app:islemci_sogutucular' %}" class="list-group-item list-group-item-action">Soğutucular</a> 
-              <a href="{% url 'parts_of_computer_app:kasa_fanlari' %}" class="list-group-item list-group-item-action">Kasa Fanları</a>       
-              <a href="{% url 'parts_of_computer_app:termal_macunlar' %}" class="list-group-item list-group-item-action">Termal Macun</a>
-              <a href="{% url 'parts_of_computer_app:klavyeler' %}" class="list-group-item list-group-item-action">Klavye</a>       
-              <a href="{% url 'parts_of_computer_app:monitorler' %}" class="list-group-item list-group-item-action">Monitor</a>       
-              <a href="{% url 'parts_of_computer_app:mouseler' %}" class="list-group-item list-group-item-action">Mouse</a>       
-
-            </div>
-            <div class="sort mt-3">
-              {% block sort_content %}
-                
-                
-              {% endblock %}
-
-            </div>
-          
-          </div>
-          <div class="col-9">
-            
-
-            {% if no_results %}
-            <p>Üzgünüz, "{{ search_query }}" için bir sonuç bulunamadı.</p>
-            {% endif %}
-            {% block content %}
+  {% block content %}
       
-            {% endblock %}
-
-          </div>
-        </div>  
-      </div>
+  {% endblock %}
+      
       <!-- Footer - Start -->
-      <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-        <div class="col-md-4 d-flex align-items-center">
-          <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
-            <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
-          </a>
-          <span class="mb-3 mb-md-0 text-muted">© 2023 Veri Tabanı ve Yönetim Sistemi</span>
-        </div>
-    
-        <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-          <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
-          <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
-          <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
-        </ul>
-      </footer>  
+      {% include "partials/_footer.html" %}
       <!-- Footer - End -->    
 
     <script>
         function showNotification(urunid) {
             alert("Merhaba! Ürün başarıyla sepete eklendi. Ürün ID: " + urunid);
         }
-
-        
     </script>
 </body>
 </html>

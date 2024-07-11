@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'parts_of_computer_app.apps.PartsOfComputerAppConfig'
+    'parts_of_computer_app.apps.PartsOfComputerAppConfig',
+
     
 ]
 
@@ -60,7 +61,10 @@ ROOT_URLCONF = 'parts_of_computer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,"templates")],
+        'DIRS': [
+            # os.path.join(BASE_DIR,"templates"),
+            BASE_DIR / 'templates'
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
