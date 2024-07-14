@@ -26,7 +26,11 @@
                     <h5 class="card-title">{{ product.price }} TL</h5>
                     <p class="card-text">{{ product.name }}</p>
                     
-                    <a href="#" class="btn btn-primary" onclick="showNotification(parseInt('{{ product.id }}'))">Ekle</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'parts_of_computer_app:add_to_cart' product.id %}" class="btn btn-primary" onclick="showNotification(parseInt('{{ product.id }}'))">Ekle</a>
+                    {% else %}
+                        <a href="{% url 'login' %}?next={% url 'parts_of_computer_app:add_to_cart' product.id %}" class="btn btn-primary">Ekle</a>
+                    {% endif %}
                     <a href="{% url 'parts_of_computer_app:urun-detaylari' id=product.id %}" class="btn btn-warning" >Detaylar</a>
                 </div>
             </div>

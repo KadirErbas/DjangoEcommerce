@@ -18,4 +18,11 @@ urlpatterns = [
   
     path("sort/", views.products_by_cost, name="products_by_cost"),     
 
+    path('about-us/', views.about_us, name="about_us"),
+
+
+    path('sepet/', views.sepet_detay, name='sepet_detay'),
+    path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+
+
 ]

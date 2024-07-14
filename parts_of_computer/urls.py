@@ -21,7 +21,7 @@ from parts_of_computer_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('parts_of_computer_app.urls')),
-    path("accounts/", include("django.contrib.auth.urls")),
+    path("", include("django.contrib.auth.urls")),
 
 
 ]

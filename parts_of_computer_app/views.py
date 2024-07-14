@@ -1,9 +1,15 @@
+from pyexpat.errors import messages
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from . import models
 from django.db.models import Q
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import forms  
+from django.contrib.auth.forms import UserCreationForm  
+from .forms import CustomUserCreationForm
+from django.views.generic import CreateView
 
 
 category_name_mapping = {
@@ -23,6 +29,11 @@ def home_view(request):
 
     category_context = {"category_name_mapping": category_name_mapping}
     return render(request, 'parts_of_computer_app/home.html', context=category_context)
+
+# views.py
+def about_us(request):
+    return render(request, 'aboutUs.html')
+
 
 def detay_view(request, id):
     product = models.Product.objects.get(id=id)
@@ -112,8 +123,39 @@ def getProductsByCategoryID(request, categoryID):
     redirect_url = reverse('parts_of_computer_app:ProductsByCategory', args=[category_name])
     return redirect(redirect_url)   
     
+
+@login_required(login_url="login")
+def sepet_detay(request):
+    return render(request, 'parts_of_computer_app/sepet_detay.html')
+
+"""
 def signup(request):
     if request.POST:
         username = request.POST["username"]
         password = request.POST["password"]
         print(username, password)
+"""
+
+def signup(request):  
+    if request.method == "POST":  
+        form = CustomUserCreationForm(request.POST)  # Form verilerini burada işliyoruz
+        if form.is_valid():  
+            form.save()  
+            return redirect('login')  # Başarılı kayıt sonrası yönlendirme
+
+    else:  
+        form = CustomUserCreationForm()  
+    
+    context = {  
+        'form': form  
+    }
+    return render(request, 'registration/signup.html', context)
+
+@login_required(login_url='login')
+def add_to_cart(request, product_id):
+    # Sepete ekleme işlemleri
+    product = models.Product.objects.get(id=product_id)
+    # Burada sepete ekleme işlemi yapılacak
+    print(f"{product.name} başarıyla sepete eklendi.")
+    return redirect('parts_of_computer_app:sepet_detay')
+

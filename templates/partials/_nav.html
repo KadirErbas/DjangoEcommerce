@@ -13,21 +13,39 @@
           <a class="nav-link" href="#"> İletişim</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"> Hakkımızda</a>
+          <a class="nav-link" href="{% url 'parts_of_computer_app:about_us' %}"> Hakkımızda</a>
         </li>
+        {% if not user.is_authenticated  %}
+
         <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}"> Giriş Yap</a>
         </li>
-        {% if user.is_authenticated  %}
-        <form method="post" action="{% url 'logout' %}?next=/">
-          {% csrf_token %}
-          <button type="submit" class="nav-link">Çıkış Yap</button>
-        </form>
         {% endif %}
 
+        {% if user.is_authenticated  %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}"> Kayıt Ol</a>
-        </li> 
+          
+          <form method="post" action="{% url 'logout' %}?next=/">
+            {% csrf_token %}
+            <button type="submit" class="nav-link">Çıkış Yap</button>
+          </form>
+        </li>
+
+        {% endif %}
+        {% if not user.is_authenticated  %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'parts_of_computer_app:signup' %}"> Kayıt Ol</a>
+        </li>
+        {% endif %}
+        {% if user.is_authenticated  %}
+
+          <li class="nav-item" >
+              <a class="nav-link" href="{% url 'parts_of_computer_app:sepet_detay' %}" >
+                  <i class="fas fa-shopping-cart">sepetim</i> 
+              </a>
+          </li>
+        {% endif %}
        
       </ul>
       <form class="d-flex" role="search" method="get" action="{% url 'parts_of_computer_app:product_by_search' %}">
