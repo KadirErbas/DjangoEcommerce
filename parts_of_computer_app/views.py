@@ -1,5 +1,5 @@
 from pyexpat.errors import messages
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from . import models
@@ -34,11 +34,14 @@ def home_view(request):
 def about_us(request):
     return render(request, 'aboutUs.html')
 
+def contact(request):
+    return render(request, 'contact.html')
+
 
 def detay_view(request, id):
     product = models.Product.objects.get(id=id)
-    product_dict = {"product": product}
-    return render(request, 'parts_of_computer_app/urun-detaylari.html',context=product_dict)
+    product_dict = {"product": product, "category_name_mapping": category_name_mapping}
+    return render(request, 'parts_of_computer_app/urun-detaylari.html', context=product_dict)
 
 
 
@@ -126,8 +129,53 @@ def getProductsByCategoryID(request, categoryID):
 
 @login_required(login_url="login")
 def sepet_detay(request):
-    return render(request, 'parts_of_computer_app/sepet_detay.html')
+    sepet = models.Sepet.objects.get(user=request.user)
+    sepet_items = sepet.items.all()
+    total_price = sum(item.total_price for item in sepet_items)
+    product_count = sepet_items.count()
+    context = {
+        "sepet_items" : sepet_items,
+        "total_price" : total_price,
+        "product_count": product_count
+    }
 
+    return render(request, 'parts_of_computer_app/sepet_detay.html', context=context)
+
+@login_required(login_url='login')
+def remove_from_cart(request, item_id):
+    sepet_item = get_object_or_404(models.SepetItem, id=item_id)
+    sepet_item.delete()
+    return redirect('parts_of_computer_app:sepet_detay')
+
+@login_required(login_url='login')
+def increment_cart_item(request, item_id):
+    sepet_item = get_object_or_404(models.SepetItem, id=item_id)
+    sepet_item.quantity += 1
+    sepet_item.save()
+    return JsonResponse({
+        'success': True,
+        'quantity': sepet_item.quantity,
+        'total_price': sepet_item.total_price,
+        'cart_total_price': sum(item.total_price for item in sepet_item.sepet.items.all())
+    })
+
+@login_required(login_url='login')
+def decrease_cart_item(request, item_id):
+    sepet_item = get_object_or_404(models.SepetItem, id=item_id)
+    if sepet_item.quantity > 1:
+        sepet_item.quantity -= 1
+        sepet_item.save()
+        success = True
+    else:
+        sepet_item.delete()
+        success = False  # False means the item was deleted
+
+    return JsonResponse({
+        'success': success,
+        'quantity': sepet_item.quantity if success else 0,
+        'total_price': sepet_item.total_price if success else 0,
+        'cart_total_price': sum(item.total_price for item in sepet_item.sepet.items.all())
+    })
 """
 def signup(request):
     if request.POST:
@@ -153,9 +201,18 @@ def signup(request):
 
 @login_required(login_url='login')
 def add_to_cart(request, product_id):
-    # Sepete ekleme işlemleri
-    product = models.Product.objects.get(id=product_id)
-    # Burada sepete ekleme işlemi yapılacak
-    print(f"{product.name} başarıyla sepete eklendi.")
-    return redirect('parts_of_computer_app:sepet_detay')
+    product = get_object_or_404(models.Product, id=product_id)
+    sepet, created = models.Sepet.objects.get_or_create(user=request.user)
+    
+    # Geldiği URL'yi saklayın
+    referer_url = request.META.get('HTTP_REFERER', '/')
+    request.session['previous_url'] = referer_url
+    
+    # SepetItem varsa miktarını artır, yoksa yeni bir SepetItem oluştur
+    sepet_item, created = models.SepetItem.objects.get_or_create(sepet=sepet, product=product)
+    if not created:
+        sepet_item.quantity += 1
+        sepet_item.save()
 
+    return redirect('parts_of_computer_app:sepet_detay')
+   

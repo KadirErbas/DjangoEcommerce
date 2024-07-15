@@ -4,6 +4,15 @@
     Ürün Detayları
 {% endblock %}
 
+{% block categories %}
+  <div class="list-group">
+      {% for category, category_name in category_name_mapping.items %}
+          <a href="{% url 'parts_of_computer_app:ProductsByCategory' category %}" class="list-group-item list-group-item-action">{{ category_name }}</a>
+      {% endfor %}
+  </div>
+
+{% endblock %}
+
 {% block products %}
 <div class="row row-cols-1 row-cols-md-2 g-4">
     

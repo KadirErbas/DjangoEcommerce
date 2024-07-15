@@ -7,8 +7,6 @@
 {% block sort_content %}
 
 <div class="sort mt-3">
-    <p>Kategory: {{ category_name }}</p> <!-- Debugging için ekleyin -->
-
     <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_asc" class="btn btn-primary">Fiyatı ucuzdan pahalıya sırala</a>
     <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_desc" class="btn btn-primary mt-2">Fiyatı pahalıdan ucuza sırala</a>
 </div>
@@ -37,4 +35,12 @@
         
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function showNotification(urunid) {
+            alert("Merhaba! Ürün başarıyla sepete eklendi. Ürün ID: " + urunid);
+        }
+    </script>
 {% endblock %}
