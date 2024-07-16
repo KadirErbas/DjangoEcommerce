@@ -113,13 +113,14 @@ def getProductsByCategory(request, category):
         context = {"products": products, "category_name": category, "category_name_mapping": category_name_mapping}
         return render(request, template, context)
     else:
-        return HttpResponseNotFound("Kategori bulunamadı")
+        return render(request, '404.html')
 
 def getProductsByCategoryID(request, categoryID):
     category_list = list(category_mapping.keys())
 
     if (categoryID > len(category_list)):
-        return HttpResponseNotFound('Kategori bulunamadı')
+        return render(request, '404.html')
+
 
     category_name= category_list[categoryID-1]
 
