@@ -59,6 +59,8 @@ def product_by_search(request):
         'search_query': search_query,
         'no_results': no_results
     }
+    print(context)
+
     return render(request, 'parts_of_computer_app/show_products.html', context)
 
 

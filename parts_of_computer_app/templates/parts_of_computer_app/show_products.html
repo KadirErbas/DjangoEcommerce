@@ -4,20 +4,25 @@
     {{category_name}}
 {% endblock %}
 
-{% block sort_content %}
 
-<div class="sort mt-3">
-    <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_asc" class="btn btn-primary">Fiyatı ucuzdan pahalıya sırala</a>
-    <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_desc" class="btn btn-primary mt-2">Fiyatı pahalıdan ucuza sırala</a>
-</div>
-{% endblock %}
+    {% block sort_content %}
+        {% if not no_results %}
+            <div class="sort mt-3">
+                <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_asc" class="btn btn-primary">Fiyatı ucuzdan pahalıya sırala</a>
+                <a href="{% url 'parts_of_computer_app:products_by_cost' %}?category={{category_name}}&order=price_desc" class="btn btn-primary mt-2">Fiyatı pahalıdan ucuza sırala</a>
+            </div>
+        {% endif %}
 
+    {% endblock %}
 
 {% block products %}
 
 </h1>
     <div class="row row-cols-1 row-cols-md-2 g-4">
-        {% for product in products %}                  
+        {% if no_results %}
+            <p> "{{search_query}}" adlı ürün bulunamadı. </p>
+        {% else %}
+            {% for product in products %}                  
             <div class="card" style="width: 18rem; float: left; margin: 2%;">
                 <img src={{ product.image_url }} width="250" height="250" class="card-img-top" alt={{ name }}>
                 <div class="card-body">
@@ -33,7 +38,9 @@
                 </div>
             </div>
         
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
+        
     </div>
 {% endblock %}
 

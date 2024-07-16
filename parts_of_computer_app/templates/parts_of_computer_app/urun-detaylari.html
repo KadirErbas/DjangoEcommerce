@@ -23,7 +23,7 @@
                 <h5 class="card-title">{{ product.price }} TL</h5>
                 <p class="card-text">{{ product.name }}</p>
 
-                <a href="#" class="btn btn-primary" onclick="showNotification(parseInt('{{ product.id }}'))">Ekle</a>
+                <a href="{% url 'parts_of_computer_app:add_to_cart' product.id %}" class="btn btn-primary" onclick="showNotification(parseInt('{{ product.id }}'))">Ekle</a>
             </div>
             
         </div>
